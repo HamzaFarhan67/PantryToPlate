@@ -1,0 +1,38 @@
+{
+  "initialPantry": [
+    { "id": "1", "name": "Chicken Breast", "category": "Proteins" },
+    { "id": "2", "name": "Heavy Cream", "category": "Dairy" },
+    { "id": "3", "name": "Garlic", "category": "Vegetables" },
+    { "id": "4", "name": "Olive Oil", "category": "Staples" },
+    { "id": "5", "name": "Pasta", "category": "Grains" }
+  ],
+  "agentSteps": [
+    "Scanning pantry inventory...",
+    "Cross-referencing ingredient combinations...",
+    "Querying recipe knowledge base...",
+    "Ranking results by match score...",
+    "Finalizing recipe selection..."
+  ],
+  "mockRecipe": {
+    "title": "Creamy Garlic Chicken Pasta",
+    "source": "Agent Fallback",
+    "prepTime": "10 mins",
+    "cookTime": "20 mins",
+    "servings": 2,
+    "ingredients": [
+      "2 chicken breasts",
+      "200ml heavy cream",
+      "3 garlic cloves, minced",
+      "2 tbsp olive oil",
+      "200g pasta"
+    ],
+    "steps": [
+      "Cook pasta according to package instructions.",
+      "Heat olive oil in a pan over medium heat.",
+      "Sear chicken breasts until golden, then slice.",
+      "In the same pan, sauté garlic until fragrant.",
+      "Add heavy cream and simmer for 5 minutes.",
+      "Toss in pasta and chicken. Serve hot."
+    ]
+  }
+}
