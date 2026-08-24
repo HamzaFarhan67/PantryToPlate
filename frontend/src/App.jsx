@@ -404,7 +404,11 @@ export default function App() {
           </aside>
 
           {/* ── MIDDLE: Recipe ───────────────────────────────────────────── */}
-          <main className="flex-1 min-w-0 flex flex-col gap-4 lg:h-[calc(100vh-6rem)] overflow-y-auto">
+          {/* NOTE: this panel no longer scrolls itself — it's a fixed-height flex
+              column, and the recipe card's own ingredients/directions grid is the
+              single scrollable region (see min-h-0 below). This avoids the
+              "nested scrollbar" bug that made the inner scroll area tiny. */}
+          <main className="flex-1 min-w-0 flex flex-col gap-4 lg:h-[calc(100vh-6rem)] overflow-hidden">
 
             {/* Agent log */}
             {(isSearching || logs.length > 0) && (
@@ -440,9 +444,15 @@ export default function App() {
             )}
 
             {/* Recipe card */}
+            {/* The whole card (image + content) scrolls together as one unit —
+                overflow-y-auto lives on this outer container, and the image is
+                a normal (non-shrink-locked-out-of-scroll) block inside it, so
+                it slides up and out of view as the user scrolls down into the
+                ingredients/directions. min-h-0 lets this flex child actually
+                shrink to fit the available space instead of overflowing the page. */}
             {recipe && !isSearching && (
-              <div className="bg-white rounded-[40px] shadow-sm border border-slate-50 overflow-hidden flex flex-col flex-1">
-                <div className="relative h-48 sm:h-64 lg:h-72 shrink-0">
+              <div className="bg-white rounded-[40px] shadow-sm border border-slate-50 overflow-y-auto flex-1 min-h-0">
+                <div className="relative h-48 sm:h-64 lg:h-72">
                   <img src="https://images.unsplash.com/photo-1519676867240-f03562e64548?q=80&w=1200&auto=format&fit=crop"
                     alt={recipe.title} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent opacity-80" />
@@ -461,14 +471,14 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 overflow-y-auto flex-1">
+                <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                   <section>
-                    <h3 className="text-lg font-black mb-4 flex items-center gap-3">Ingredients <div className="h-1 w-8 bg-[#ffd700] rounded-full" /></h3>
-                    <ul className="space-y-3">{recipe.ingredients.map((ing,i)=><IngredientListItem key={i} label={ing}/>)}</ul>
+                    <h3 className="text-xl font-black mb-4 flex items-center gap-3">Ingredients <div className="h-1 w-8 bg-[#ffd700] rounded-full" /></h3>
+                    <ul className="space-y-4">{recipe.ingredients.map((ing,i)=><IngredientListItem key={i} label={ing}/>)}</ul>
                   </section>
                   <section>
-                    <h3 className="text-lg font-black mb-4 flex items-center gap-3">Directions <div className="h-1 w-8 bg-[#ffd700] rounded-full" /></h3>
-                    <div className="space-y-5">{recipe.steps.map((step,i)=><StepItem key={i} number={String(i+1).padStart(2,'0')} text={step} active={i===0}/>)}</div>
+                    <h3 className="text-xl font-black mb-4 flex items-center gap-3">Directions <div className="h-1 w-8 bg-[#ffd700] rounded-full" /></h3>
+                    <div className="space-y-6">{recipe.steps.map((step,i)=><StepItem key={i} number={String(i+1).padStart(2,'0')} text={step} active={i===0}/>)}</div>
                   </section>
                 </div>
               </div>
@@ -603,17 +613,17 @@ const StatPill = ({ icon, label }) => (
 
 const IngredientListItem = ({ label }) => (
   <li className="flex items-center gap-3 group cursor-pointer">
-    <div className="w-2 h-2 rounded-full bg-[#ffd700] group-hover:scale-125 transition-all shadow-[0_0_6px_#ffd700] shrink-0" />
-    <span className="text-slate-800 font-bold text-sm leading-relaxed">{label}</span>
+    <div className="w-2.5 h-2.5 rounded-full bg-[#ffd700] group-hover:scale-125 transition-all shadow-[0_0_6px_#ffd700] shrink-0" />
+    <span className="text-slate-800 font-bold text-base leading-relaxed">{label}</span>
   </li>
 );
 
 const StepItem = ({ number, text, active = false }) => (
   <div className="flex gap-4">
-    <div className={`shrink-0 w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm transition-all ${
+    <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-black text-base transition-all ${
       active ? 'bg-[#ffd700] text-slate-900 shadow-md shadow-yellow-100 scale-105' : 'bg-slate-50 text-slate-300 border border-slate-100'
     }`}>{number}</div>
-    <p className={`text-xs leading-relaxed font-bold flex-1 ${active ? 'text-slate-900' : 'text-slate-400'}`}>{text}</p>
+    <p className={`text-sm leading-relaxed font-bold flex-1 ${active ? 'text-slate-900' : 'text-slate-400'}`}>{text}</p>
   </div>
 );
 
